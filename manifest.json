@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Bandcamp Email Playlist",
+  "name": "Bandcamp Listenlist",
   "version": "1.0",
-  "description": "Builds a playlist from Bandcamp emails in Gmail.",
+  "description": "Build a listenlist in your browser as you dig through Bandcamp",
   "permissions": ["storage", "tabs", "scripting", "activeTab"],
   "host_permissions": ["https://*.bandcamp.com/*"],
   "action": {
