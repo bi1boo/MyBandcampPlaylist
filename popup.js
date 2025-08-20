@@ -2,10 +2,15 @@ chrome.storage.local.get({ playlist: [] }, (result) => {
   const list = document.getElementById("results");
   result.playlist.forEach((album) => {
     const item = document.createElement("div");
-    const iframe = `<iframe style="border: 0; width: 100%; height: 42px;" src="https://bandcamp.com/EmbeddedPlayer/album=${album.id}/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/" seamless><a href="${album.url}">${album.title}</a></iframe>`;
+    let iframe;
+    if (!album.is_album) {
+      iframe = `<iframe style="border: 0; width: 100%; height: 42px;" src="https://bandcamp.com/EmbeddedPlayer/track=${album.id}/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/" seamless><a href="${album.url}">${album.title}</a></iframe>`;
+    } else if (album.is_album) {
+      iframe = `<iframe style="border: 0; width: 365px; height: 178px;" src="https://bandcamp.com/EmbeddedPlayer/album=${album.id}/size=large/bgcol=ffffff/linkcol=0687f5/artwork=none/transparent=true/" seamless><a href="${album.url}">${album.title}</a></iframe>`;
+      // iframe = `<iframe style="border: 0; width: 100%; height: 42px;" src="https://bandcamp.com/EmbeddedPlayer/album=${album.id}/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/" seamless><a href="${album.url}">${album.title}</a></iframe>`;
+    }
     item.innerHTML = iframe;
     list.appendChild(item);
-    console.log(result);
   });
 });
 
@@ -15,19 +20,36 @@ document.getElementById("add").addEventListener("click", () => {
       {
         target: { tabId: tabs[0].id },
         func: () => {
-          const data = document
-            .querySelector("meta[name=bc-page-properties]")
-            ?.getAttribute("content");
-          const title = document
-            .querySelector("meta[name=title]")
-            ?.getAttribute("content");
-          const url = document
-            .querySelector("meta[property='og:url']")
-            ?.getAttribute("content");
-          const parsed = JSON.parse(data);
-          const id = parsed.item_id;
-          console.log("content" + id, title, url);
-          return { id, title, url };
+          const current_url = window.location.href;
+          const is_album = !current_url.includes("/track/");
+
+          if (is_album) {
+            const data = document
+              .querySelector("meta[name=bc-page-properties]")
+              ?.getAttribute("content");
+            const title = document
+              .querySelector("meta[name=title]")
+              ?.getAttribute("content");
+            const url = document
+              .querySelector("meta[property='og:url']")
+              ?.getAttribute("content");
+            const parsed = JSON.parse(data);
+            const id = parsed.item_id;
+            return { is_album, id, title, url };
+          } else {
+            const data = document
+              .querySelector("meta[name=bc-page-properties]")
+              ?.getAttribute("content");
+            const title = document
+              .querySelector("meta[name=title]")
+              ?.getAttribute("content");
+            const url = document
+              .querySelector("meta[property='og:url']")
+              ?.getAttribute("content");
+            const parsed = JSON.parse(data);
+            const id = parsed.item_id;
+            return { is_album, id, title, url };
+          }
         },
       },
       (results) => {
@@ -40,14 +62,18 @@ document.getElementById("add").addEventListener("click", () => {
             console.log("Already in playlist");
             return;
           }
-
           const item = document.createElement("div");
-          const iframe = `<iframe style="border: 0; width: 100%; height: 42px;" src="https://bandcamp.com/EmbeddedPlayer/album=${response.id}/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/" seamless><a href="${response.url}">${response.title}</a></iframe>`;
+          let iframe = "";
+          if (!response.is_album) {
+            iframe = `<iframe style="border: 0; width: 100%; height: 42px;" src="https://bandcamp.com/EmbeddedPlayer/track=${response.id}/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/" seamless><a href="${response.url}">${response.title}</a></iframe>`;
+          } else if (response.is_album) {
+            iframe = `<iframe style="border: 0; width: 400px; height: 208px;" src="https://bandcamp.com/EmbeddedPlayer/album=${response.id}/size=large/bgcol=ffffff/linkcol=0687f5/artwork=small/transparent=true/" seamless><a href="${response.url}">${response.title}</a></iframe>`;
+
+            // iframe = `<iframe style="border: 0; width: 100%; height: 42px;" src="https://bandcamp.com/EmbeddedPlayer/album=${response.id}/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/" seamless><a href="${response.url}">${response.title}</a></iframe>`;
+          }
+
           item.innerHTML = iframe;
           document.getElementById("results").appendChild(item);
-          console.log(item);
-          console.log(response.id, response.title, response.url);
-
           const updated = [...result.playlist, response];
           chrome.storage.local.set({ playlist: updated }, () => {
             console.log("Playlist Saved ok");

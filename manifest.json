@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Bandcamp Listenlist",
+  "name": "Bandcamp Listening List",
   "version": "1.0",
-  "description": "Build a listenlist in your browser as you dig through Bandcamp",
+  "description": "Build a Listening List in your browser as you dig through Bandcamp",
   "permissions": ["storage", "tabs", "scripting", "activeTab"],
   "host_permissions": ["https://*.bandcamp.com/*"],
   "action": {
