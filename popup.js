@@ -95,6 +95,7 @@ document.getElementById("clear").addEventListener("click", () => {
   });
 });
 
+
 document.getElementById("open-player").addEventListener("click", () => {
   chrome.windows.create({
     url: chrome.runtime.getURL("player.html"),

@@ -1,3 +1,16 @@
+function play() {
+    var audio = new Audio("/audio/air-horn-sound-effect-372453.mp3");
+    if (audio.paused) {
+        audio.play();
+    }else{
+        audio.currentTime = 0
+    }
+}
+
+document.getElementById("airhorn").addEventListener("click", () =>{
+  play()
+})
+
 chrome.storage.local.get({ playlist: [] }, (result) => {
   const list = document.getElementById("results");
   result.playlist.forEach((album) => {
