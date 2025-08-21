@@ -1,7 +1,8 @@
-# Bandcamp Listen List
-Bandcamp Listening List Chrome extension
+# Bandcamp Listening List Chrome extension
 
 Bandcamp Listening List is a simple chrome extension that lets you build a Listening List in your browser as you dig through Bandcamp so you can listen as you go. 
+
+![screenshot](screenshot1.png)
 
 How to install:
 
