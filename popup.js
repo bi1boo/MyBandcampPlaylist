@@ -1,3 +1,10 @@
+function notification(message){
+  const toast = document.createElement("div")
+  toast.textContent = message
+  document.body.appendChild(toast)
+  setTimeout(() => toast.remove(), 1000)
+}
+
 chrome.storage.local.get({ playlist: [] }, (result) => {
   const list = document.getElementById("results");
   result.playlist.forEach((album) => {
@@ -6,8 +13,7 @@ chrome.storage.local.get({ playlist: [] }, (result) => {
     if (!album.is_album) {
       iframe = `<iframe style="border: 0; width: 100%; height: 42px;" src="https://bandcamp.com/EmbeddedPlayer/track=${album.id}/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/" seamless><a href="${album.url}">${album.title}</a></iframe>`;
     } else if (album.is_album) {
-      iframe = `<iframe style="border: 0; width: 365px; height: 178px;" src="https://bandcamp.com/EmbeddedPlayer/album=${album.id}/size=large/bgcol=ffffff/linkcol=0687f5/artwork=none/transparent=true/" seamless><a href="${album.url}">${album.title}</a></iframe>`;
-      // iframe = `<iframe style="border: 0; width: 100%; height: 42px;" src="https://bandcamp.com/EmbeddedPlayer/album=${album.id}/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/" seamless><a href="${album.url}">${album.title}</a></iframe>`;
+      iframe = `<iframe style="border: 0; width: 100%; height: 42px;" src="https://bandcamp.com/EmbeddedPlayer/album=${album.id}/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/" seamless><a href="${album.url}">${album.title}</a></iframe>`;
     }
     item.innerHTML = iframe;
     list.appendChild(item);
@@ -59,6 +65,7 @@ document.getElementById("add").addEventListener("click", () => {
             (a) => a.id === response.id
           );
           if (alreadyExists) {
+            notification("Already in playlist")
             console.log("Already in playlist");
             return;
           }
@@ -67,9 +74,7 @@ document.getElementById("add").addEventListener("click", () => {
           if (!response.is_album) {
             iframe = `<iframe style="border: 0; width: 100%; height: 42px;" src="https://bandcamp.com/EmbeddedPlayer/track=${response.id}/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/" seamless><a href="${response.url}">${response.title}</a></iframe>`;
           } else if (response.is_album) {
-            iframe = `<iframe style="border: 0; width: 400px; height: 208px;" src="https://bandcamp.com/EmbeddedPlayer/album=${response.id}/size=large/bgcol=ffffff/linkcol=0687f5/artwork=small/transparent=true/" seamless><a href="${response.url}">${response.title}</a></iframe>`;
-
-            // iframe = `<iframe style="border: 0; width: 100%; height: 42px;" src="https://bandcamp.com/EmbeddedPlayer/album=${response.id}/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/" seamless><a href="${response.url}">${response.title}</a></iframe>`;
+            iframe = `<iframe style="border: 0; width: 100%; height: 42px;" src="https://bandcamp.com/EmbeddedPlayer/album=${response.id}/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/" seamless><a href="${response.url}">${response.title}</a></iframe>`;
           }
 
           item.innerHTML = iframe;
